@@ -95,6 +95,8 @@ interface ProviderInterface
      */
     public function process(MediaInterface $media, VariantInterface $variant, \SplFileInfo $source = NULL);
 
+    public function processFromParent($media, VariantInterface $variant, VariantInterface $parentVariant, Filesystem $filesystem);
+    
     /**
      * Renders a variant to HTML code. Useful for twig (or other template engines) integrations
      *

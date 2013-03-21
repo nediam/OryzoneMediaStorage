@@ -11,6 +11,10 @@
 
 namespace Oryzone\MediaStorage\Provider;
 
+use Gaufrette\Filesystem,
+    Gaufrette\Stream\Local,
+    Gaufrette\StreamMode;
+
 use Oryzone\MediaStorage\Model\MediaInterface,
     Oryzone\MediaStorage\Variant\VariantInterface,
     Oryzone\MediaStorage\Exception\ProviderProcessException,
@@ -167,6 +171,29 @@ class ImageProvider extends FileProvider
         }
 
         return false;
+    }
+
+    public function processFromParent($media, VariantInterface $variant, VariantInterface $parentVariant, Filesystem $filesystem)
+    {
+        $tempName = $this->tempDir.'/'.$parentVariant->getFilename();
+
+        $src = $filesystem->createStream($parentVariant->getFilename());
+        $dst = new Local($tempName);
+
+        $src->open(new StreamMode('rb+'));
+        $dst->open(new StreamMode('wb+'));
+
+        while (!$src->eof()) {
+            $data    = $src->read(100000);
+            $written = $dst->write($data);
+        }
+        $dst->close();
+        $src->close();
+
+        $this->addTempFile($tempName);
+
+        // We now have a local copy of file
+        return $this->process($media, $variant, new \SplFileInfo($tempName));
     }
 
     /**

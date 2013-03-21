@@ -483,6 +483,39 @@ class MediaStorage implements MediaStorageInterface
                 $variant = $this->defaultVariant;
         }
 
+        if (!$media->hasVariant($variant)) {
+            // If this media does not have a variant based on its parent variant, if it has a parent
+            $filesystem = $this->getFilesystem($context->getFilesystemName());
+            $namingStrategy = $this->getNamingStrategy($context->getNamingStrategyName());
+            $context = $this->getContext($media->getContext());
+            $provider = $this->getProvider($context->getProviderName(), $context->getProviderOptions());
+            $variantsTree = $context->buildVariantTree();
+
+            /** @var $node VariantNode */
+            $node = $variantsTree->getNode($variant);
+            $childVariant = $node->getContent();
+            while ($node->getParent()) { // advance to parent node
+                $node = $node->getParent();
+            }
+
+            // Get parents variant information to base this new variant off
+            $parentVariant = $media->getVariantInstance($node->getContent()->getName());
+            // @todo
+            if (!$filesystem->has($parentVariant->getFilename())) {
+                throw new \InvalidArgumentException();
+            }
+
+            $filesystem->get($parentVariant->getFilename());
+            $result = $provider->processFromParent($media, $childVariant, $parentVariant, $filesystem);
+            $name = $namingStrategy->generateName($media, $childVariant, $filesystem);
+            $this->saveFileToFilesystem($result, $name, $filesystem, $childVariant);
+
+            //updates the variant in the media (to store the new values)
+            $media->addVariant($childVariant);
+
+            $this->persistenceAdapter->update($media);
+        }
+
         $provider = $this->getProvider($context->getProviderName(), $context->getProviderOptions());
         $variantInstance = $media->getVariantInstance($variant);
 
