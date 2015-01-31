@@ -11,8 +11,6 @@
 
 namespace Oryzone\MediaStorage;
 
-use Gaufrette\StreamMode,
-    Gaufrette\Stream\Local;
 
 use Oryzone\MediaStorage\Event\EventDispatcherAdapterInterface,
     Oryzone\MediaStorage\Persistence\PersistenceAdapterInterface,
@@ -29,7 +27,8 @@ use Oryzone\MediaStorage\Event\EventDispatcherAdapterInterface,
     Oryzone\MediaStorage\Exception\InvalidContentException,
     Oryzone\MediaStorage\Exception\IOException,
     Oryzone\MediaStorage\Exception\VariantProcessingException,
-    Symfony\Component\HttpFoundation\File\UploadedFile;
+    Symfony\Component\HttpFoundation\File\UploadedFile,
+    League\Flysystem\Filesystem as FlyFilesystem;
 
 class MediaStorage implements MediaStorageInterface
 {
@@ -300,16 +299,15 @@ class MediaStorage implements MediaStorageInterface
                             $name .= '.'.$extension;
 
                             // read file data as stream and writes it in a single block
-                            $src = new Local($result->getPathname());
-                            $src->open(new StreamMode('rb+'));
+                            $src = fopen($result->getPathname(), 'rb+');
                             $content = '';
-                            while (!$src->eof()) {
-                                $data     = $src->read(100000);
+                            while (false === feof($src)) {
+                                $data     = fread($src, 100000);
                                 $content .= $data;
                             }
-                            $dst = $filesystem->createFile($name);
-                            $dst->setContent($content);
-                            $src->close();
+                            /** @var FlyFilesystem $filesystem */
+                            $dst = $filesystem->put($name, $content);
+                            fclose($src);
 
                             $variant->setFilename($name);
                             $variant->setStatus(VariantInterface::STATUS_READY);

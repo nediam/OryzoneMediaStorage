@@ -11,6 +11,8 @@
 
 namespace Oryzone\MediaStorage\Filesystem;
 
+use League\Flysystem\MountManager;
+
 interface FilesystemFactoryInterface
 {
 
@@ -20,7 +22,7 @@ interface FilesystemFactoryInterface
      * @param string $filesystemName name of a filesystem
      *
      * @throws \Oryzone\MediaStorage\Exception\InvalidArgumentException if the filesystem does not exist
-     * @return \Gaufrette\Filesystem
+     * @return MountManager
      */
     public function get($filesystemName);
 

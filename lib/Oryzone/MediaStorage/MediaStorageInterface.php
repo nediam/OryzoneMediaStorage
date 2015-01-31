@@ -81,7 +81,7 @@ interface MediaStorageInterface
      *
      * @param  string|null                                                   $name
      * @throws \Oryzone\MediaStorage\Exception\InvalidArgumentException
-     * @return \Gaufrette\Filesystem
+     * @return \League\Flysystem\Filesystem
      */
     public function getFilesystem($name = NULL);
 

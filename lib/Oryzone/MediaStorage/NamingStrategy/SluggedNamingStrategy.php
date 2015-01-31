@@ -11,9 +11,9 @@
 
 namespace Oryzone\MediaStorage\NamingStrategy;
 
-use Gaufrette\Filesystem;
 
-use Oryzone\MediaStorage\Model\MediaInterface,
+use League\Flysystem\FilesystemInterface,
+    Oryzone\MediaStorage\Model\MediaInterface,
     Oryzone\MediaStorage\Variant\VariantInterface,
     Oryzone\MediaStorage\Exception\InvalidArgumentException;
 
@@ -35,7 +35,7 @@ class SluggedNamingStrategy extends NamingStrategy
     /**
      * {@inheritDoc}
      */
-    public function generateName(MediaInterface $media, VariantInterface $variant, Filesystem $filesystem)
+    public function generateName(MediaInterface $media, VariantInterface $variant, FilesystemInterface $filesystem)
     {
         $name = trim($media->getName());
         if( $name == '' )

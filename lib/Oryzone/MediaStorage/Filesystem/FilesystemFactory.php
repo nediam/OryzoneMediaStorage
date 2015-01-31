@@ -11,15 +11,13 @@
 
 namespace Oryzone\MediaStorage\Filesystem;
 
-use Gaufrette\Filesystem;
 
-use Oryzone\MediaStorage\Exception\InvalidArgumentException,
+use League\Flysystem\Filesystem,
+    Oryzone\MediaStorage\Exception\InvalidArgumentException,
     Oryzone\MediaStorage\Exception\InvalidConfigurationException;
 
 /**
- * Factory for gaufrette filesystems (to decouple the library from the symfony bundle for gaufrette)
- * mostly copied from gaufrette bundle filesystem map:
- * https://github.com/KnpLabs/KnpGaufretteBundle/blob/master/FilesystemMap.php
+ * Factory for flysystem filesystems (to decouple the library from the symfony bundle for flysystem)
  */
 class FilesystemFactory implements FilesystemFactoryInterface, \IteratorAggregate
 {
@@ -51,7 +49,7 @@ class FilesystemFactory implements FilesystemFactoryInterface, \IteratorAggregat
         $filesystem = $this->map[$filesystemName];
 
         if(! $filesystem instanceof Filesystem)
-            throw new InvalidConfigurationException(sprintf('The filesystem registered with the name "%s" is not an instance of "\Gaufrette\Filesystem"', $filesystemName));
+            throw new InvalidConfigurationException(sprintf('The filesystem registered with the name "%s" is not an instance of "\League\Flysystem\Filesystem"', $filesystemName));
 
         return $filesystem;
     }
