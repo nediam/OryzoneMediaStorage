@@ -11,7 +11,9 @@
 
 namespace Oryzone\MediaStorage\Provider;
 
+use League\Flysystem\Filesystem;
 use Oryzone\MediaStorage\Model\MediaInterface;
+use Oryzone\MediaStorage\Variant\VariantInterface;
 
 abstract class Provider implements ProviderInterface
 {
@@ -94,5 +96,13 @@ abstract class Provider implements ProviderInterface
         foreach($this->tempFiles as $file)
             if(file_exists($file))
                 unlink($file);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function processFromParent(MediaInterface $media, VariantInterface $variant, VariantInterface $parentVariant, Filesystem $filesystem)
+    {
+        return null;
     }
 }
