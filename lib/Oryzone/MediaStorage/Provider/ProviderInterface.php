@@ -11,9 +11,8 @@
 
 namespace Oryzone\MediaStorage\Provider;
 
-use Oryzone\MediaStorage\Model\MediaInterface,
-    Oryzone\MediaStorage\Variant\VariantInterface,
-    Oryzone\MediaStorage\Context\ContextInterface;
+use League\Flysystem\Filesystem;
+use Oryzone\MediaStorage\Model\MediaInterface, Oryzone\MediaStorage\Variant\VariantInterface, Oryzone\MediaStorage\Context\ContextInterface;
 
 interface ProviderInterface
 {
@@ -34,14 +33,12 @@ interface ProviderInterface
 
     /**
      * Gets the name of the provider
-     *
      * @return string
      */
     public function getName();
 
     /**
      * Get the content type of the current provider
-     *
      * @return int
      */
     public function getContentType();
@@ -50,6 +47,7 @@ interface ProviderInterface
      * Sets an array of options for the provider
      *
      * @param  array $options
+     *
      * @return void
      */
     public function setOptions($options);
@@ -93,10 +91,18 @@ interface ProviderInterface
      *
      * @return \SplFileInfo|null
      */
-    public function process(MediaInterface $media, VariantInterface $variant, \SplFileInfo $source = NULL);
+    public function process(MediaInterface $media, VariantInterface $variant, \SplFileInfo $source = null);
 
-    public function processFromParent($media, VariantInterface $variant, VariantInterface $parentVariant, Filesystem $filesystem);
-    
+    /**
+     * @param MediaInterface   $media
+     * @param VariantInterface $variant
+     * @param VariantInterface $parentVariant
+     * @param Filesystem       $filesystem
+     *
+     * @return \SplFileInfo|null
+     */
+    public function processFromParent(MediaInterface $media, VariantInterface $variant, VariantInterface $parentVariant, Filesystem $filesystem);
+
     /**
      * Renders a variant to HTML code. Useful for twig (or other template engines) integrations
      *
@@ -107,7 +113,7 @@ interface ProviderInterface
      *
      * @return string
      */
-    public function render(MediaInterface $media, VariantInterface $variant, $url = NULL, $options = array());
+    public function render(MediaInterface $media, VariantInterface $variant, $url = null, $options = []);
 
     /**
      * Removes any temp file stored by the current provider instance
