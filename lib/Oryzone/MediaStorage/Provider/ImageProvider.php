@@ -11,10 +11,6 @@
 
 namespace Oryzone\MediaStorage\Provider;
 
-use
-    Gaufrette\Stream\Local,
-    Gaufrette\StreamMode;
-
 use League\Flysystem\Filesystem;
 use Oryzone\MediaStorage\Model\MediaInterface,
     Oryzone\MediaStorage\Variant\VariantInterface,

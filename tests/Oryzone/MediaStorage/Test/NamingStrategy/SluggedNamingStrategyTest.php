@@ -49,7 +49,7 @@ class SluggedNamingStrategyTest extends \PHPUnit_Framework_TestCase
         $variant->expects($this->any())
                 ->method('getName')
                 ->will($this->returnValue('default'));
-        $filesystem = $this->getMock('\Gaufrette\Filesystem', array(), array(), '', FALSE);
+        $filesystem = $this->getMock('\League\Flysystem\Filesystem', array(), array(), '', FALSE);
         $this->assertRegExp('/^foo-(\w+)_default$/', $this->strategy->generateName($media, $variant, $filesystem));
     }
 
@@ -64,7 +64,7 @@ class SluggedNamingStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->will($this->returnValue(''));
         $variant = $this->getMock('\Oryzone\MediaStorage\Variant\VariantInterface');
-        $filesystem = $this->getMock('\Gaufrette\Filesystem', array(), array(), '', FALSE);
+        $filesystem = $this->getMock('\League\Flysystem\Filesystem', array(), array(), '', FALSE);
         $this->strategy->generateName($media, $variant, $filesystem);
     }
 }

@@ -30,8 +30,8 @@ class FilesystemFactoryTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $adapter = $this->getMock('\Gaufrette\Adapter');
-        $this->default = $this->getMock('\Gaufrette\Filesystem', array(), array($adapter));
+        $adapter = $this->getMock('\League\Flysystem\Adapter\NullAdapter');
+        $this->default = $this->getMock('\League\Flysystem\Filesystem', array(), array($adapter));
         $map = array(
             'default' => $this->default,
             'invalid' => 'foo'
